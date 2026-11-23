@@ -152,7 +152,82 @@ def polymarket():
     for r in rows:
         append("polymarket.csv", ["time_utc", "query", "question", "first_outcome", "first_outcome_price", "volume_usd", "end_date"], r)
 
+# ---- event alerts (price / derivatives triggers; no trading) ----
+ALERT_MOVE_1H = 3.0          # % move vs previous hourly row, any coin
+ALERT_CHG24 = {"btc": 5.0, "eth": 7.0, "sol": 7.0, "xrp": 7.0}   # |24h change| %
+ALERT_FUNDING = 0.0005       # |OKX BTC funding rate| (0.05% per 8h) = extreme crowding
+ALERT_OI_DROP = 8.0          # % fall in BTC open interest vs previous row (liquidation proxy)
+ALERT_COOLDOWN_H = 6         # same trigger not repeated within this many hours
+ALERT_MAX_PER_DAY = 3        # alert batches per UTC day
+
+def _rows(name):
+    path = os.path.join(OUT, name)
+    if not os.path.exists(path): return []
+    with open(path, newline="") as f:
+        return list(csv.DictReader(f))
+
+def _t(s): return dt.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+
+def check_alerts():
+    found = []                       # (key, detail)
+    pr = _rows("prices.csv")
+    if pr:
+        cur = pr[-1]; prev = pr[-2] if len(pr) > 1 else None
+        gap_ok = prev and 30 <= (_t(cur["time_utc"]) - _t(prev["time_utc"])).total_seconds() / 60 <= 150
+        for c in ("btc", "eth", "sol", "xrp"):
+            try:
+                chg = float(cur[f"{c}_chg24h_pct"])
+                if abs(chg) >= ALERT_CHG24[c]:
+                    found.append((f"{c}_24h", f"{c.upper()} {chg:+.1f}% over 24h (price {float(cur[f'{c}_usd']):,.2f})"))
+                if gap_ok:
+                    m = (float(cur[f"{c}_usd"]) / float(prev[f"{c}_usd"]) - 1) * 100
+                    if abs(m) >= ALERT_MOVE_1H:
+                        found.append((f"{c}_1h", f"{c.upper()} {m:+.1f}% since the previous hourly reading"))
+            except Exception:
+                pass
+    ok = _rows("okx_derivatives.csv")
+    if ok:
+        cur = ok[-1]; prev = ok[-2] if len(ok) > 1 else None
+        try:
+            fr = float(cur["btc_funding_rate"])
+            if abs(fr) >= ALERT_FUNDING:
+                found.append(("btc_funding", f"BTC funding rate {fr*100:+.3f}% per 8h (extreme {'long' if fr>0 else 'short'} crowding)"))
+            if prev and 30 <= (_t(cur["time_utc"]) - _t(prev["time_utc"])).total_seconds() / 60 <= 150:
+                oi = (float(cur["btc_open_interest_usd"]) / float(prev["btc_open_interest_usd"]) - 1) * 100
+                if oi <= -ALERT_OI_DROP:
+                    found.append(("btc_oi_drop", f"BTC open interest {oi:+.1f}% in about an hour (possible liquidation cascade)"))
+        except Exception:
+            pass
+    if os.environ.get("FORCE_TEST_ALERT") == "1":
+        found = [("test", "TEST ALERT: this is a test of the alert pipeline, not a market event")] + found
+    if not found:
+        return
+    hist = _rows("alerts.csv")
+    now = _t(NOW)
+    fresh = []
+    for key, detail in found:
+        if key == "test":
+            fresh.append((key, detail)); continue
+        last = [h for h in hist if h["key"] == key]
+        if last and (now - _t(last[-1]["time_utc"])).total_seconds() < ALERT_COOLDOWN_H * 3600:
+            continue
+        fresh.append((key, detail))
+    if not fresh:
+        return
+    today = NOW[:10]
+    batches_today = len({h["time_utc"] for h in hist if h["time_utc"].startswith(today)})
+    if batches_today >= ALERT_MAX_PER_DAY and not any(k == "test" for k, _ in fresh):
+        return
+    for key, detail in fresh:
+        append("alerts.csv", ["time_utc", "key", "detail"], [NOW, key, detail])
+    body = "@JonHagwood market event flagged at " + NOW + " (UTC):\n\n" + "\n".join(f"- {d}" for _, d in fresh) + \
+           "\n\nSay 'check dry run' in Claude to investigate. Paper trading only; this alert does not trade."
+    with open(os.path.join(os.path.dirname(OUT), "alert_message.md"), "w") as f:
+        f.write(body)
+
 if __name__ == "__main__":
     for fn in (prices, fear_greed, stablecoins, okx_derivs, deribit, fred, news, polymarket):
         try: fn()
         except Exception as e: err(fn.__name__, e)
+    try: check_alerts()
+    except Exception as e: err("check_alerts", e)

@@ -2,9 +2,15 @@ name: collect-market-data
 on:
   schedule:
     - cron: "7 * * * *"      # every hour at minute 7 (UTC)
-  workflow_dispatch: {}       # lets you run it by hand from the Actions tab
+  workflow_dispatch:          # run by hand from the Actions tab
+    inputs:
+      test_alert:
+        description: "Send a test alert issue (set to 1)"
+        required: false
+        default: "0"
 permissions:
   contents: write
+  issues: write
 concurrency:
   group: collect
   cancel-in-progress: false
@@ -19,6 +25,7 @@ jobs:
       - name: Collect
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FORCE_TEST_ALERT: ${{ github.event.inputs.test_alert }}
         run: python collect.py
       - name: Commit data
         run: |
@@ -27,3 +34,10 @@ jobs:
           git add data
           git diff --cached --quiet || git commit -m "data $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
+      - name: Open alert issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -f alert_message.md ]; then
+            gh issue create --title "Market alert $(date -u +%Y-%m-%dT%H:%MZ)" --body-file alert_message.md
+          fi

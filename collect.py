@@ -124,7 +124,7 @@ def news():
             if new: w.writerow(["first_seen_utc", "source", "published", "title", "url"])
             w.writerows(rows)
 
-POLY_QUERIES = ("Fed rate", "Bitcoin", "recession")
+POLY_QUERIES = ("Fed hike December", "Fed decision", "Bitcoin", "recession")
 
 def polymarket():
     """Snapshot top active prediction-market odds (Polymarket public search) per query to data/polymarket.csv."""
@@ -145,6 +145,7 @@ def polymarket():
                 vol = m.get("volumeNum")
                 try: vol = float(vol if vol is not None else m.get("volume") or 0)
                 except Exception: vol = 0.0
+                if first < 0.02: continue   # skip long-shot outcomes (little information)
                 mk.append((vol, clean(m.get("question")), label, first, clean(m.get("endDateIso") or m.get("endDate"))))
         mk.sort(reverse=True)
         for vol, qu, label, first, end in mk[:5]:

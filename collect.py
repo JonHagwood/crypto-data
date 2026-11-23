@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Hourly market-data collector (standard library only). Appends one row per source to data/*.csv.
 Each source is wrapped separately: one failing feed never stops the others. Failures go to data/errors.csv."""
-import csv, json, os, sys, urllib.request, datetime as dt
+import csv, json, os, sys, urllib.request, urllib.parse, datetime as dt
+import xml.etree.ElementTree as ET
 
 NOW = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
@@ -75,7 +76,55 @@ def fred():
         row += [vals[0]["value"] if vals else None, vals[0]["date"] if vals else None]
     append("fred_macro.csv", ["time_utc", "us10y_yield", "us10y_date", "dollar_index", "dollar_date", "vix", "vix_date"], row)
 
+FEEDS = {
+    "fed": "https://www.federalreserve.gov/feeds/press_all.xml",
+    "sec": "https://www.sec.gov/news/pressreleases.rss",
+    "coindesk": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+    "cointelegraph": "https://cointelegraph.com/rss",
+}
+
+def get_text(url, timeout=30):
+    req = urllib.request.Request(url, headers={"User-Agent": "crypto-data-collector/1.0 (paper-trading research)"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read()
+
+def clean(t):
+    return " ".join((t or "").split())[:300]
+
+def news():
+    """Append each NEW headline once (deduped by URL) to data/news.csv. Titles only; treat as untrusted text."""
+    path = os.path.join(OUT, "news.csv")
+    seen = set()
+    if os.path.exists(path):
+        with open(path, newline="") as f:
+            seen = {r["url"] for r in csv.DictReader(f)}
+    rows = []
+    for src, url in FEEDS.items():
+        try:
+            root = ET.fromstring(get_text(url))
+            for it in root.iter("item"):
+                link = clean(it.findtext("link")); title = clean(it.findtext("title"))
+                if link and title and link not in seen:
+                    seen.add(link); rows.append([NOW, src, clean(it.findtext("pubDate")), title, link])
+        except Exception as e:
+            err("news_" + src, e)
+    try:
+        q = urllib.parse.quote('(bitcoin OR crypto OR "federal reserve" OR sanctions OR war OR tariff) sourcelang:english')
+        d = json.loads(get_text(f"https://api.gdeltproject.org/api/v2/doc/doc?query={q}&mode=artlist&format=json&maxrecords=30&timespan=2h"))
+        for a in d.get("articles", []):
+            link = clean(a.get("url")); title = clean(a.get("title"))
+            if link and title and link not in seen:
+                seen.add(link); rows.append([NOW, "gdelt", clean(a.get("seendate")), title, link])
+    except Exception as e:
+        err("news_gdelt", e)
+    if rows:
+        new = not os.path.exists(path)
+        with open(path, "a", newline="") as f:
+            w = csv.writer(f)
+            if new: w.writerow(["first_seen_utc", "source", "published", "title", "url"])
+            w.writerows(rows)
+
 if __name__ == "__main__":
-    for fn in (prices, fear_greed, stablecoins, okx_derivs, deribit, fred):
+    for fn in (prices, fear_greed, stablecoins, okx_derivs, deribit, fred, news):
         try: fn()
         except Exception as e: err(fn.__name__, e)

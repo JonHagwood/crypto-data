@@ -1,0 +1,16 @@
+time_utc,query,question,first_outcome,first_outcome_price,volume_usd,end_date
+2026-11-23T21:18:49Z,Fed rate,Will no Fed rate cuts happen in 2026?,Yes,0.9845,9846888.880918,2027-01-01
+2026-11-23T21:18:49Z,Fed rate,Will 11 Fed rate cuts happen in 2026?,Yes,0.0005,5334669.288101,2027-01-01
+2026-11-23T21:18:49Z,Fed rate,Will 10 Fed rate cuts happen in 2026?,Yes,0.0005,4991923.8195159985,2027-01-01
+2026-11-23T21:18:49Z,Fed rate,Will 9 Fed rate cuts happen in 2026?,Yes,0.0005,4335547.237517999,2027-01-01
+2026-11-23T21:18:49Z,Fed rate,Will 6 Fed rate cuts happen in 2026?,Yes,0.0005,4251506.91032,2027-01-01
+2026-11-23T21:18:49Z,Bitcoin,"Will Bitcoin dip to $45,000 by December 31, 2026?",Yes,0.1445,10750550.019249,2027-01-01
+2026-11-23T21:18:49Z,Bitcoin,"Will Bitcoin dip to $55,000 by December 31, 2026?",Yes,0.47,9503070.831311999,2027-01-01
+2026-11-23T21:18:49Z,Bitcoin,"Will Bitcoin dip to $50,000 by December 31, 2026?",Yes,0.2755,6988480.212907,2027-01-01
+2026-11-23T21:18:49Z,Bitcoin,"Will Bitcoin reach $250,000 by December 31, 2026?",Yes,0.0015,5682761.044238,2027-01-01
+2026-11-23T21:18:49Z,Bitcoin,"Will Bitcoin dip to $15,000 by December 31, 2026?",Yes,0.0125,5183183.910686998,2027-01-01
+2026-11-23T21:18:49Z,recession,US recession by end of 2026?,Yes,0.0205,2535131.8401980004,2027-01-31
+2026-11-23T21:18:49Z,recession,US recession by end of 2027?,Yes,0.315,26800.119055,2027-12-31
+2026-11-23T21:18:49Z,recession,UK Recession in 2026?,Yes,0.0235,15974.394046000001,2027-05-01
+2026-11-23T21:18:49Z,recession,Japan recession in 2026?,Yes,0.165,4341.739604,2027-05-01
+2026-11-23T21:18:49Z,recession,Will the Democrats sweep the House and Senate and the US not enter a recession by the end of 2027?,Yes,0.682,2826.576785,2028-02-01

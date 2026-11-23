@@ -124,7 +124,35 @@ def news():
             if new: w.writerow(["first_seen_utc", "source", "published", "title", "url"])
             w.writerows(rows)
 
+POLY_QUERIES = ("Fed rate", "Bitcoin", "recession")
+
+def polymarket():
+    """Snapshot top active prediction-market odds (Polymarket public search) per query to data/polymarket.csv."""
+    rows = []
+    for q in POLY_QUERIES:
+        d = get("https://gamma-api.polymarket.com/public-search?q=" + urllib.parse.quote(q) + "&limit_per_type=5&events_status=active")
+        mk = []
+        for ev in d.get("events") or []:
+            for m in ev.get("markets") or []:
+                if m.get("closed") or m.get("active") is False: continue
+                try:
+                    outs = m.get("outcomes"); prs = m.get("outcomePrices")
+                    outs = json.loads(outs) if isinstance(outs, str) else outs
+                    prs = json.loads(prs) if isinstance(prs, str) else prs
+                    first = float(prs[0]); label = outs[0]
+                except Exception:
+                    continue
+                vol = m.get("volumeNum")
+                try: vol = float(vol if vol is not None else m.get("volume") or 0)
+                except Exception: vol = 0.0
+                mk.append((vol, clean(m.get("question")), label, first, clean(m.get("endDateIso") or m.get("endDate"))))
+        mk.sort(reverse=True)
+        for vol, qu, label, first, end in mk[:5]:
+            rows.append([NOW, q, qu, label, first, vol, end])
+    for r in rows:
+        append("polymarket.csv", ["time_utc", "query", "question", "first_outcome", "first_outcome_price", "volume_usd", "end_date"], r)
+
 if __name__ == "__main__":
-    for fn in (prices, fear_greed, stablecoins, okx_derivs, deribit, fred, news):
+    for fn in (prices, fear_greed, stablecoins, okx_derivs, deribit, fred, news, polymarket):
         try: fn()
         except Exception as e: err(fn.__name__, e)

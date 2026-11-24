@@ -5,3 +5,4 @@ time_utc,source,error
 2026-11-24T06:45:14Z,news_gdelt,HTTP Error 429: Too Many Requests
 2026-11-24T11:00:19Z,news_gdelt,GDELT still rate-limited (429) after retries
 2026-11-24T13:00:21Z,news_gdelt,GDELT still rate-limited (429) after retries
+2026-11-24T16:00:19Z,news_gdelt,GDELT still rate-limited (429) after retries

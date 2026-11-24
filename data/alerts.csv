@@ -1,2 +1,3 @@
 time_utc,key,detail
 2026-11-23T21:18:49Z,test,"TEST ALERT: this is a test of the alert pipeline, not a market event"
+2026-11-24T01:49:39Z,test,"TEST ALERT: this is a test of the alert pipeline, not a market event"

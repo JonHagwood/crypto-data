@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Hourly market-data collector (standard library only). Appends one row per source to data/*.csv.
 Each source is wrapped separately: one failing feed never stops the others. Failures go to data/errors.csv."""
-import csv, json, os, sys, urllib.request, urllib.parse, datetime as dt
+import csv, json, os, sys, time, urllib.request, urllib.parse, urllib.error, datetime as dt
 import xml.etree.ElementTree as ET
 
 NOW = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -110,7 +110,16 @@ def news():
             err("news_" + src, e)
     try:
         q = urllib.parse.quote('(bitcoin OR crypto OR "federal reserve" OR sanctions OR war OR tariff) sourcelang:english')
-        d = json.loads(get_text(f"https://api.gdeltproject.org/api/v2/doc/doc?query={q}&mode=artlist&format=json&maxrecords=30&timespan=2h"))
+        gurl = f"https://api.gdeltproject.org/api/v2/doc/doc?query={q}&mode=artlist&format=json&maxrecords=30&timespan=2h"
+        d = None
+        for wait in (0, 12, 30, 60):          # GDELT rate-limits shared IPs: back off and retry
+            if wait: time.sleep(wait)
+            try:
+                d = json.loads(get_text(gurl)); break
+            except urllib.error.HTTPError as he:
+                if he.code != 429: raise
+        if d is None:
+            raise RuntimeError("GDELT still rate-limited (429) after retries")
         for a in d.get("articles", []):
             link = clean(a.get("url")); title = clean(a.get("title"))
             if link and title and link not in seen:

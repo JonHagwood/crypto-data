@@ -2,3 +2,5 @@ time_utc,key,detail
 2026-11-23T21:18:49Z,test,"TEST ALERT: this is a test of the alert pipeline, not a market event"
 2026-11-24T01:49:39Z,test,"TEST ALERT: this is a test of the alert pipeline, not a market event"
 2026-11-24T02:51:34Z,test,"TEST ALERT: this is a test of the alert pipeline, not a market event"
+2026-11-24T14:00:19Z,btc_24h,"BTC -5.4% over 24h (price 59,956.00)"
+2026-11-24T14:00:19Z,sol_24h,SOL -8.0% over 24h (price 69.85)

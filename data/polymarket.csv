@@ -1014,3 +1014,23 @@ time_utc,query,question,first_outcome,first_outcome_price,volume_usd,end_date
 2026-11-26T01:00:17Z,recession,UK Recession in 2026?,Yes,0.024,15974.394046000001,2027-05-01
 2026-11-26T01:00:17Z,recession,Japan recession in 2026?,Yes,0.11,4341.739604,2027-05-01
 2026-11-26T01:00:17Z,recession,Will the Democrats sweep the House and Senate and the US not enter a recession by the end of 2027?,Yes,0.6835,2826.576785,2028-02-01
+2026-11-26T02:00:19Z,Fed hike December,Will the Fed hike-hike-hike in the next three decisions (Dec-Jan-Mar)?,Yes,0.245,26199.694456,2027-03-17
+2026-11-26T02:00:19Z,Fed hike December,Hike 25 bps or No change favored for January Fed on December 10?,Hike 25 bps,0.66,13241.007967999998,2026-12-10
+2026-11-26T02:00:19Z,Fed hike December,Will the Fed hike-pause-hike in the next three decisions (Dec-Jan-Mar)?,Yes,0.26,11478.696125,2027-03-17
+2026-11-26T02:00:19Z,Fed hike December,Will the Fed hike-hike-pause in the next three decisions (Dec-Jan-Mar)?,Yes,0.28,9129.542086000001,2027-03-17
+2026-11-26T02:00:19Z,Fed hike December,Will the Fed hike-pause-pause in the next three decisions (Dec-Jan-Mar)?,Yes,0.175,4021.038589999999,2027-03-17
+2026-11-26T02:00:19Z,Fed decision,Will there be no change in Fed interest rates after the December 2026 meeting?,Yes,0.043,16619936.877139999,2026-12-09
+2026-11-26T02:00:19Z,Fed decision,Will the Fed increase interest rates by 25 bps after the December 2026 meeting?,Yes,0.935,13524736.064811,2026-12-09
+2026-11-26T02:00:19Z,Fed decision,Will the Fed increase interest rates by 50+ bps after the December 2026 meeting?,Yes,0.023,11431244.102512999,2026-12-09
+2026-11-26T02:00:19Z,Fed decision,Will the Fed increase interest rates by 25 bps after the January 2027 meeting?,Yes,0.545,1328371.5733470002,2027-01-28
+2026-11-26T02:00:19Z,Fed decision,Will there be no change in Fed interest rates after the January 2027 meeting?,Yes,0.435,1016402.877831,2027-01-28
+2026-11-26T02:00:19Z,Bitcoin,"Will Bitcoin dip to $45,000 by December 31, 2026?",Yes,0.111,10946923.602404,2027-01-01
+2026-11-26T02:00:19Z,Bitcoin,"Will Bitcoin dip to $55,000 by December 31, 2026?",Yes,0.485,9693389.036733,2027-01-01
+2026-11-26T02:00:19Z,Bitcoin,"Will Bitcoin dip to $50,000 by December 31, 2026?",Yes,0.265,7196527.937861999,2027-01-01
+2026-11-26T02:00:19Z,Bitcoin,"Will Bitcoin dip to $35,000 by December 31, 2026?",Yes,0.05,4175969.0808409997,2027-01-01
+2026-11-26T02:00:19Z,Bitcoin,"Will Bitcoin reach $90,000 by December 31, 2026?",Yes,0.0315,3805353.068025999,2027-01-01
+2026-11-26T02:00:19Z,recession,US recession by end of 2026?,Yes,0.0315,2540885.230198001,2027-01-31
+2026-11-26T02:00:19Z,recession,US recession by end of 2027?,Yes,0.35,39201.390504,2027-12-31
+2026-11-26T02:00:19Z,recession,UK Recession in 2026?,Yes,0.024,15974.394046000001,2027-05-01
+2026-11-26T02:00:19Z,recession,Japan recession in 2026?,Yes,0.105,4341.739604,2027-05-01
+2026-11-26T02:00:19Z,recession,Will the Democrats sweep the House and Senate and the US not enter a recession by the end of 2027?,Yes,0.6835,2826.576785,2028-02-01

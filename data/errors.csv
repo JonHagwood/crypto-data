@@ -29,3 +29,4 @@ time_utc,source,error
 2026-11-26T02:56:30Z,news_gdelt,GDELT still rate-limited (429) after retries
 2026-11-26T04:00:19Z,news_fed,HTTP Error 404: Not Found
 2026-11-26T04:00:19Z,news_gdelt,GDELT still rate-limited (429) after retries
+2026-11-26T05:00:19Z,news_gdelt,GDELT still rate-limited (429) after retries

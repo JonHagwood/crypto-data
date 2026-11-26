@@ -32,3 +32,4 @@ time_utc,source,error
 2026-11-26T05:00:19Z,news_gdelt,GDELT still rate-limited (429) after retries
 2026-11-26T06:00:20Z,news_gdelt,GDELT still rate-limited (429) after retries
 2026-11-26T09:00:19Z,news_gdelt,<urlopen error timed out>
+2026-11-26T12:55:43Z,news_gdelt,GDELT still rate-limited (429) after retries

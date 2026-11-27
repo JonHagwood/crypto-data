@@ -43,3 +43,4 @@ time_utc,source,error
 2026-11-27T05:00:17Z,news_gdelt,<urlopen error timed out>
 2026-11-27T05:12:04Z,news_gdelt,GDELT still rate-limited (429) after retries
 2026-11-27T07:00:24Z,news_gdelt,<urlopen error timed out>
+2026-11-27T09:00:27Z,deribit,HTTP Error 503: Service Unavailable

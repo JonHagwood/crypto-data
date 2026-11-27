@@ -4,3 +4,7 @@ time_utc,key,detail
 2026-11-24T02:51:34Z,test,"TEST ALERT: this is a test of the alert pipeline, not a market event"
 2026-11-24T14:00:19Z,btc_24h,"BTC -5.4% over 24h (price 59,956.00)"
 2026-11-24T14:00:19Z,sol_24h,SOL -8.0% over 24h (price 69.85)
+2026-11-27T15:00:22Z,btc_1h,BTC -3.5% since the previous hourly reading
+2026-11-27T15:00:22Z,eth_1h,ETH -3.9% since the previous hourly reading
+2026-11-27T15:00:22Z,sol_1h,SOL -3.2% since the previous hourly reading
+2026-11-27T15:00:22Z,xrp_1h,XRP -3.1% since the previous hourly reading

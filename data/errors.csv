@@ -66,3 +66,4 @@ time_utc,source,error
 2026-11-28T07:00:17Z,news_gdelt,<urlopen error _ssl.c:994: The handshake operation timed out>
 2026-11-28T08:00:20Z,news_gdelt,GDELT still rate-limited (429) after retries
 2026-11-28T09:00:20Z,news_gdelt,GDELT still rate-limited (429) after retries
+2026-11-28T10:00:20Z,news_gdelt,<urlopen error timed out>
